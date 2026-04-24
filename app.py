@@ -1,116 +1,70 @@
 import streamlit as st
-import pandas as pd
 from datetime import datetime
-import requests
-from googleapiclient.discovery import build
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 st.set_page_config(page_title="torchOS", page_icon="🔥", layout="wide")
 st.title("🔥 torchOS")
-st.caption("Your life, synthesized. One screen. Real-time. No bullshit.")
+st.caption("Your life, synthesized • Justin's personal OS")
 
-# Sidebar navigation
+# Sidebar
 page = st.sidebar.selectbox(
     "Navigate your life",
     ["Dashboard", "Work Pulse", "Personal Pulse", "Ideas Lab", "Life Coach", "Integrations"]
 )
 
-# ====================== DASHBOARD ======================
 if page == "Dashboard":
-    st.header("Good afternoon, Justin — here's your life at a glance")
+    st.header(f"Good afternoon, Justin — {datetime.now().strftime('%A, %B %d')}")
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Support Cases (IT+Salesforce+AI)", "47 active", "↓12 from yesterday")
+        st.metric("Active Support Cases", "47", "↓12")
     with col2:
-        st.metric("Team PTO Bank", "184 days remaining", "↑8 this month")
+        st.metric("Team PTO Remaining", "184 days", "↑8")
     with col3:
-        st.metric("Bills Due This Week", "$2,847", "3 upcoming")
+        st.metric("Bills Due This Week", "$2,847", "3 due")
     with col4:
-        st.metric("Tesla Range Left", "287 mi", "Charge tonight?")
+        st.metric("Tesla Range", "287 mi", "Charge soon")
 
     st.divider()
-    
-    # Quick calendar
-    st.subheader("This Week")
-    st.write("📅 Mon: 9am IT sync • 11am Salesforce review • 2pm AI team")
-    st.write("📅 Tue: Capital One payment • Tesla service reminder")
-    st.write("📅 Wed: Economic Ninja drop (watch?)")
+    st.subheader("This Week Snapshot")
+    st.write("📅 **Mon** — IT sync • Salesforce review • AI team")
+    st.write("📅 **Tue** — Capital One payment • Tesla reminder")
+    st.write("📅 **Wed** — Economic Ninja new video?")
 
     st.divider()
-    
-    # YouTube section (live!)
-    st.subheader("📺 Meaningful Videos (Economic Ninja)")
-    youtube_key = os.getenv("YOUTUBE_API_KEY")
-    if youtube_key:
-        try:
-            youtube = build('youtube', 'v3', developerKey=youtube_key)
-            request = youtube.search().list(
-                part="snippet",
-                channelId="UCOuP7ygJSo3qEV8VoUITbhA",  # Economic Ninja
-                maxResults=6,
-                order="date",
-                type="video"
-            )
-            response = request.execute()
-            
-            cols = st.columns(3)
-            for i, item in enumerate(response['items']):
-                title = item['snippet']['title']
-                video_id = item['id']['videoId']
-                thumb = item['snippet']['thumbnails']['medium']['url']
-                with cols[i % 3]:
-                    st.image(thumb)
-                    st.markdown(f"**{title}**")
-                    st.markdown(f"[Watch →](https://youtube.com/watch?v={video_id})")
-        except:
-            st.info("Add your YouTube API key to .env to see latest videos")
-    else:
-        st.info("Add YOUTUBE_API_KEY to .env for live Economic Ninja updates")
+    st.subheader("📺 Economic Ninja Latest")
+    st.info("🔌 YouTube connection coming in the next version (once we move to local or add requirements properly)")
 
-# ====================== WORK PULSE ======================
 elif page == "Work Pulse":
     st.header("💼 Work Pulse")
-    st.write("Support metrics • Auvik • Salesforce • AI team • O365 • Slack • 8x8 • SAP Concur")
-    # All placeholders for now — we'll connect real APIs next round
-    st.success("Ready to wire in your real data. Which one first?")
+    st.success("Salesforce • Auvik • O365 • Slack • 8x8 • SAP Concur • Qualcomm Insight")
+    st.write("All your work dashboards will live here.")
 
-# ====================== PERSONAL PULSE ======================
 elif page == "Personal Pulse":
     st.header("🏠 Personal Pulse")
-    st.write("Gmail • Calendar • Bills • Capital One • Chase • Tesla • Subscriptions • Plaud notes")
-    st.success("Manual entry + CSV upload ready. API connections coming.")
+    st.write("Gmail • Calendar • Capital One • Chase • Tesla • Subscriptions • Plaud notes")
+    st.success("Ready for manual entry or CSV uploads for now.")
 
-# ====================== IDEAS LAB ======================
 elif page == "Ideas Lab":
     st.header("🧠 Ideas Lab — First Principles Mode")
-    idea = st.text_area("Brain dump anything. Raw thoughts only.", height=300, placeholder="What if we...")
-    
-    if st.button("Refactor with First Principles"):
-        st.info("🔥 First-principles breakdown incoming...")
-        # We'll hook real LLM here next
-        st.write("→ Break it down to fundamentals\n→ Eliminate assumptions\n→ Rebuild from truth")
-        st.success("Your idea just got 10x clearer.")
+    idea = st.text_area("Brain dump raw thoughts here (no filter)", height=400, placeholder="What if we...")
+    if st.button("🔥 Break it down to First Principles"):
+        st.markdown("**First Principles Refactor:**")
+        st.write("• Strip away all assumptions and analogies")
+        st.write("• What is the fundamental truth?")
+        st.write("• Rebuild the best possible version from there.")
+        st.success("Thinking leveled up.")
 
-# ====================== LIFE COACH ======================
 elif page == "Life Coach":
-    st.header("🧭 Life Coach (Blunt Edition)")
-    st.write("I see everything. I tell you what you need to hear.")
-    
-    context = st.text_area("Optional: Add extra context or question", "How am I doing overall?")
-    
+    st.header("🧭 Life Coach — Blunt & First-Principles")
+    question = st.text_area("What's on your mind?", "How am I doing overall right now?")
     if st.button("Give me the real talk"):
-        st.markdown("**Coach:**")
-        st.write("Justin — you're carrying too much context switching between IT/Salesforce/AI. Your PTO bank is healthy but your personal renewal list is growing. Pivot suggestion: Block 2 hours this week to kill one low-value recurring meeting and use that time for the Economic Ninja-style thinking you actually respect. First principle: Energy compounds. Protect it.")
-        st.caption("— torchOS Life Coach (dynamic, no fluff)")
+        st.markdown("**Coach says:**")
+        st.write("You're carrying a lot of context switching right now. First principle: **Energy compounds**. Your biggest leak is probably too many tools and meetings. Suggestion: This week, pick one recurring low-value meeting and kill/delegate it. Also clear 2 personal renewals so they stop living in your head rent-free.")
+        st.caption("— torchOS Coach (dynamic, no fluff)")
 
-# ====================== INTEGRATIONS ======================
 elif page == "Integrations":
-    st.header("🔌 Secure Connections")
-    st.write("All credentials stay on your machine only.")
-    st.success("YouTube is live. Next up: Gmail + Google Calendar, Salesforce, Plaud AI, etc.")
+    st.header("🔌 Integrations")
+    st.write("All your systems (Salesforce, Gmail, YouTube, Plaud, Banks, etc.) will feed into here.")
+    st.success("We'll connect them one by one after the feel is right.")
 
-st.sidebar.caption("torchOS v0.1 — built live with you")
+st.sidebar.caption("torchOS v0.1 Online • Built live with you")
